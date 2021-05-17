@@ -49,7 +49,9 @@ class RelationshipView(APIView):
 
             relationship = Relationship.objects.filter(Q(user=user, friend=friend) | Q(user=friend, friend=user))
 
-            if serializer.data.get('user_login') == serializer.data.get('friend_login') or relationship is not None:
+            if user is None or friend is None \
+                    or serializer.data.get('user_login') == serializer.data.get('friend_login') \
+                    or len(relationship) != 0:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
             relationship_saved = Relationship.objects.create(user=user, friend=friend)
